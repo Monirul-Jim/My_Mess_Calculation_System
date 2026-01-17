@@ -31,21 +31,21 @@ const App = () => {
   const reportRef = useRef<HTMLDivElement>(null);
 
   const [members, setMembers] = useState<Member[]>([
-    { id: "1", name: "Asif", bazar: 2537, totalMeals: 43, houseRent: 3250 },
-    { id: "2", name: "Noman", bazar: 1520, totalMeals: 40.5, houseRent: 3250 },
-    { id: "3", name: "Omar", bazar: 1590, totalMeals: 43.5, houseRent: 2000 },
-    { id: "4", name: "Monir", bazar: 2200, totalMeals: 11, houseRent: 2500 },
-    { id: "5", name: "Mithu", bazar: 1278, totalMeals: 48.5, houseRent: 2500 },
-    { id: "6", name: "Fahim", bazar: 1710, totalMeals: 28, houseRent: 2500 },
+    // { id: "1", name: "Asif", bazar: 2537, totalMeals: 43, houseRent: 3250 },
+    // { id: "2", name: "Noman", bazar: 1520, totalMeals: 40.5, houseRent: 3250 },
+    // { id: "3", name: "Omar", bazar: 1590, totalMeals: 43.5, houseRent: 2000 },
+    // { id: "4", name: "Monir", bazar: 2200, totalMeals: 11, houseRent: 2500 },
+    // { id: "5", name: "Mithu", bazar: 1278, totalMeals: 48.5, houseRent: 2500 },
+    // { id: "6", name: "Fahim", bazar: 1710, totalMeals: 28, houseRent: 2500 },
   ]);
 
   const [utilities, setUtilities] = useState<Utility[]>([
-    { id: "1", name: "Khala Bill", amount: 3600 },
-    { id: "2", name: "Electricity", amount: 1200 },
-    { id: "3", name: "Gass", amount: 4800 },
-    { id: "4", name: "Net", amount: 1000 },
-    { id: "5", name: "Water", amount: 1000 },
-    { id: "6", name: "Waste", amount: 200 },
+    // { id: "1", name: "Khala Bill", amount: 3600 },
+    // { id: "2", name: "Electricity", amount: 1200 },
+    // { id: "3", name: "Gass", amount: 4800 },
+    // { id: "4", name: "Net", amount: 1000 },
+    // { id: "5", name: "Water", amount: 1000 },
+    // { id: "6", name: "Waste", amount: 200 },
   ]);
 
   // Calculations
@@ -195,7 +195,7 @@ const App = () => {
                                 updateMember(
                                   m.id,
                                   "bazar",
-                                  Number(e.target.value)
+                                  Number(e.target.value),
                                 )
                               }
                               className="w-24 bg-transparent border-none focus:ring-2 focus:ring-indigo-100 rounded-lg p-1"
@@ -209,7 +209,7 @@ const App = () => {
                                 updateMember(
                                   m.id,
                                   "totalMeals",
-                                  Number(e.target.value)
+                                  Number(e.target.value),
                                 )
                               }
                               className="w-20 bg-transparent border-none focus:ring-2 focus:ring-indigo-100 rounded-lg p-1"
@@ -223,7 +223,7 @@ const App = () => {
                                 updateMember(
                                   m.id,
                                   "houseRent",
-                                  Number(e.target.value)
+                                  Number(e.target.value),
                                 )
                               }
                               className="w-24 bg-indigo-50 border-none focus:ring-2 focus:ring-indigo-200 rounded-lg p-1 font-bold text-indigo-700"
@@ -295,6 +295,121 @@ const App = () => {
                               {grandTotal.toFixed(2)}
                             </td>
                             <td
+                              className={`p-4 text-right font-black ${balance >= 0 ? "text-green-600" : "text-red-600"}`}
+                            >
+                              {balance >= 0
+                                ? `+${balance.toFixed(2)}`
+                                : balance.toFixed(2)}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                    {/* --- ADDED FOOTER SECTION BELOW --- */}
+                    <tfoot className="bg-slate-900 text-white font-bold">
+                      <tr>
+                        <td className="p-4 rounded-bl-lg">TOTAL</td>
+                        <td className="p-4 text-center font-mono">
+                          {members
+                            .reduce(
+                              (sum, m) => sum + m.totalMeals * mealRate,
+                              0,
+                            )
+                            .toFixed(2)}
+                        </td>
+                        <td className="p-4 text-center font-mono">
+                          {totalUtility.toFixed(2)}
+                        </td>
+                        <td className="p-4 text-center font-mono">
+                          {(totalBazar + totalUtility - totalBazar).toFixed(2)}{" "}
+                          {/* Logic check: Meal sum + Total Utility */}
+                          {(
+                            members.reduce(
+                              (sum, m) => sum + m.totalMeals * mealRate,
+                              0,
+                            ) + totalUtility
+                          ).toFixed(2)}
+                        </td>
+                        <td className="p-4 text-center font-mono">
+                          {totalHouseRent.toFixed(2)}
+                        </td>
+                        <td className="p-4 text-center font-mono">
+                          {members
+                            .reduce(
+                              (sum, m) =>
+                                sum +
+                                (m.totalMeals * mealRate +
+                                  utilityPerPerson +
+                                  m.houseRent),
+                              0,
+                            )
+                            .toFixed(2)}
+                        </td>
+                        <td className="p-4 text-right rounded-br-lg font-mono">
+                          {members
+                            .reduce((sum, m) => {
+                              const mealCost = m.totalMeals * mealRate;
+                              const grandTotal =
+                                mealCost + utilityPerPerson + m.houseRent;
+                              return sum + (m.bazar - grandTotal);
+                            }, 0)
+                            .toFixed(2)}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+              {/* <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h2 className="text-xl font-bold mb-6 flex items-center gap-2 text-slate-700">
+                  <FileText className="text-emerald-600" size={24} /> Detailed
+                  Monthly Bill
+                </h2>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-slate-50 text-slate-600 font-bold">
+                      <tr>
+                        <th className="p-4 rounded-l-lg text-left">Member</th>
+                        <th className="p-4 text-center">Meal Cost</th>
+                        <th className="p-4 text-center">Utility</th>
+                        <th className="p-4 text-center text-blue-600">
+                          Cost (No Rent)
+                        </th>
+                        <th className="p-4 text-center">Rent</th>
+                        <th className="p-4 text-center">Total Cost</th>
+                        <th className="p-4 rounded-r-lg text-right">Balance</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                      {members.map((m) => {
+                        const mealCost = m.totalMeals * mealRate;
+                        const costWithoutRent = mealCost + utilityPerPerson;
+                        const grandTotal = costWithoutRent + m.houseRent;
+                        const balance = m.bazar - grandTotal;
+                        return (
+                          <tr
+                            key={m.id}
+                            className="hover:bg-slate-50 transition"
+                          >
+                            <td className="p-4 font-bold text-slate-800">
+                              {m.name || "Guest"}
+                            </td>
+                            <td className="p-4 text-center font-mono">
+                              {mealCost.toFixed(2)}
+                            </td>
+                            <td className="p-4 text-center font-mono">
+                              {utilityPerPerson.toFixed(2)}
+                            </td>
+                            <td className="p-4 text-center font-mono font-bold text-blue-600 bg-blue-50/30">
+                              {costWithoutRent.toFixed(2)}
+                            </td>
+                            <td className="p-4 text-center font-mono font-bold text-indigo-600">
+                              {m.houseRent.toFixed(2)}
+                            </td>
+                            <td className="p-4 text-center font-black text-slate-900">
+                              {grandTotal.toFixed(2)}
+                            </td>
+                            <td
                               className={`p-4 text-right font-black ${
                                 balance >= 0 ? "text-green-600" : "text-red-600"
                               }`}
@@ -309,7 +424,7 @@ const App = () => {
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Sidebar Section */}
@@ -365,7 +480,7 @@ const App = () => {
                         }
                       />
                       <input
-                        className="w-16 bg-slate-50 border-none text-xs p-2 rounded-lg font-bold"
+                        className="w-20 bg-slate-50 border-none text-xs p-2 rounded-lg font-bold"
                         type="number"
                         value={u.amount}
                         onChange={(e) =>
